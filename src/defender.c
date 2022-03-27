@@ -16,14 +16,35 @@
 /*                              PUBLIC FUNCTIONS                              */
 /*----------------------------------------------------------------------------*/
 
+int defender_movement_count = 0;
+position_t attacker_spy_position;
+position_t defender_my_position;
+position_t defender_last_position;
+
+direction_t defender_strategy_after_spy(position_t defender_position) {
+  if(defender_position.i <= attacker_spy_position.i) return (direction_t) DIR_DOWN;
+  return (direction_t ) DIR_UP;
+}
+
 direction_t execute_defender_strategy(
     position_t defender_position, Spy attacker_spy) {
-  // TODO: unused parameters, remove these lines later
-  UNUSED(defender_position);
-  UNUSED(attacker_spy);
+  if(defender_movement_count == 0) {
+    defender_movement_count++;
+    defender_last_position = defender_position;
+    return (direction_t) DIR_UP;
+  }
+  if(defender_movement_count == 1) {
+    defender_movement_count++;
+    defender_last_position = defender_position;
+    return (direction_t) DIR_DOWN;
+  } 
+  if(get_spy_number_uses(attacker_spy) == 0) {
+    attacker_spy_position = get_spy_position(attacker_spy);
+    defender_my_position = defender_position;
+  }
 
-  // TODO: Implement Defender logic here
-  return (direction_t) DIR_LEFT;
+      
+  return defender_strategy_after_spy(defender_position);
 }
 
 /*----------------------------------------------------------------------------*/
